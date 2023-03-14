@@ -101,19 +101,44 @@ window.onload = function(){
     //缩略图点击切换事件
     thumbnailClick()
     function thumbnailClick(){
-        const liNodes = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom #piclist ul li ")
-        //缩略图小图
-        const smallPic_img = document.querySelector("#wrapper #content .contentMain #center #left #leftTop #smallPic img")
-        const imagessrc =  goodData.imagessrc
-        //缩略图小图路径需要默认和数据中第一张图片是一样的
-        smallPic_img.src = imagessrc[0].s 
-        //循环点击li标签
+        const liNodes = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom #piclist ul li") 
+        const ul = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom #piclist ul")
+        const smallImg = document.querySelector("#wrapper #content .contentMain #center #left #leftTop #smallPic img")
+        let imgs = goodData.imagessrc
+        const li_offsetWidth =  liNodes[0].offsetWidth
+        const li_marginRight = getComputedStyle(liNodes[0], null).marginRight
+        smallPic_img.src = imagessrc[0].s  //缩略图小图路径需要默认和数据中第一张图片是一样的
         for (let i = 0; i < liNodes.length; i++) {
             liNodes[i].onclick = function(){
+                if(i < liNodes.length - 5){
+                    left = -(li_offsetWidth + Number(li_marginRight.slice(0,2))) * i
+                    ul.style.left = left + "px"
+                }
                 bigimgIndex = i
+                smallImg.src = imgs[i].s
+            }
+            
+        }
+    }
 
-                //变换小图路径
-                smallPic_img.src = imagessrc[i].s
+    //点击缩略图左右箭头的效果
+    thumbnailClick()
+    function thumbnailClick(){
+        const liNodes = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom #piclist ul li") 
+        const ul = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom #piclist ul")
+        const smallImg = document.querySelector("#wrapper #content .contentMain #center #left #leftTop #smallPic img")
+        let imgs = goodData.imagessrc
+        const li_offsetWidth =  liNodes[0].offsetWidth
+        const li_marginRight = getComputedStyle(liNodes[0], null).marginRight
+        smallPic_img.src = imagessrc[0].s  //缩略图小图路径需要默认和数据中第一张图片是一样的
+        for (let i = 0; i < liNodes.length; i++) {
+            liNodes[i].onclick = function(){
+                if(i < liNodes.length - 5){
+                    left = -(li_offsetWidth + Number(li_marginRight.slice(0,2))) * i
+                    ul.style.left = left + "px"
+                }
+                bigimgIndex = i
+                smallImg.src = imgs[i].s
             }
             
         }
@@ -122,33 +147,39 @@ window.onload = function(){
     //点击缩略图左右箭头的效果
     thunbnailLeftRightClick()
     function thunbnailLeftRightClick(){
-        //获取左右箭头元素
-        const prev = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom a.prev ")
-        const next = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom a.next ")
-        //实际上是ul进行移动
-        const ul = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom #piclist ul ")
-        const liNodes = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom #piclist ul li")
-
-        //起点位置
-        let start = 0
-        //步长
-        let step = (liNodes[0].offsetWidth + 20)
-        //总体可移动的距离 = ul宽度 - div宽度 = （图片总数 - div中显示的数量） * （li的宽度 + 20）
-        let endPosition = (liNodes.length - 5) * (liNodes[0].offsetWidth + 20)
-
+        const prev = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom a")[0]
+        const next = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom a")[1]
+        const liNodes = document.querySelectorAll("#wrapper #content .contentMain #center #left #leftBottom #piclist ul li") 
+        const ul = document.querySelector("#wrapper #content .contentMain #center #left #leftBottom #piclist ul")
+        let li_offsetWidth =  liNodes[0].offsetWidth
+        let li_marginRight = getComputedStyle(liNodes[0], null).marginRight
+        //ul总还可以移动距离 = ul宽度 - div宽度 = （图片总数 - div中显示的数量） * （li的宽度 + 20）
+        let dist = (liNodes.length - 5) * (li_offsetWidth + Number(li_marginRight.slice(0,2)))
+        start = 0  //设置起始值
+        step = li_offsetWidth + Number(li_marginRight.slice(0,2)) //设置步长
+        let imgs = goodData.imagessrc
+        const smallImg = document.querySelector("#wrapper #content .contentMain #center #left #leftTop #smallPic img")
+        
         prev.onclick = function(){
-            start -=step
-            if(start<0){
+            start -= step
+            if(start< 0){
                 start = 0
             }
             ul.style.left = -start + "px"
+            console.log(start)
+            let i = start / step
+            smallImg.src = imgs[i].s
         }
+
         next.onclick = function(){
             start += step
-            if(start>endPosition){
-                start = endPosition
+            if(start>dist){
+                start = dist
             }
             ul.style.left = -start + "px"
+            console.log(start)
+            let i = start / step
+            smallImg.src = imgs[i].s
         }
     }
 
